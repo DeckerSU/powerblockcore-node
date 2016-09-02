@@ -6,11 +6,11 @@ var path = require('path');
 var index = require('..');
 var log = index.log;
 
-var p2p = require('bitcore-p2p');
+var p2p = require('litecore-p2p');
 var Peer = p2p.Peer;
 var Messages = p2p.Messages;
 var chai = require('chai');
-var bitcore = require('bitcore-lib');
+var bitcore = require('litecore-lib');
 var Transaction = bitcore.Transaction;
 var BN = bitcore.crypto.BN;
 var async = require('async');

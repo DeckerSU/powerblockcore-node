@@ -64,7 +64,7 @@ describe('#create', function() {
         throw err;
       }
 
-      var configPath = testDir + '/mynode/bitcore-node.json';
+      var configPath = testDir + '/mynode/litecore-node.json';
       var packagePath = testDir + '/mynode/package.json';
 
       should.equal(fs.existsSync(configPath), true);
