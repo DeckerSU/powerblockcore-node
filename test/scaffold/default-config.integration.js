@@ -6,7 +6,7 @@ var sinon = require('sinon');
 var proxyquire = require('proxyquire');
 
 describe('#defaultConfig', function() {
-  var expectedExecPath = path.resolve(__dirname, '../../bin/bitcoind');
+  var expectedExecPath = path.resolve(__dirname, '../../bin/litecoind');
 
   it('will return expected configuration', function() {
     var config = JSON.stringify({
@@ -19,7 +19,7 @@ describe('#defaultConfig', function() {
       servicesConfig: {
         bitcoind: {
           spawn: {
-            datadir: process.env.HOME + '/.litecore/data',
+            datadir: process.env.HOME + '/.litecoin/data',
             exec: expectedExecPath
           }
         }
@@ -29,7 +29,7 @@ describe('#defaultConfig', function() {
       fs: {
         existsSync: sinon.stub().returns(false),
         writeFileSync: function(path, data) {
-          path.should.equal(process.env.HOME + '/.litecore/litecore-node.json');
+          path.should.equal(process.env.HOME + '/.litecoin/litecore-node.json');
           data.should.equal(config);
         },
         readFileSync: function() {
@@ -42,13 +42,13 @@ describe('#defaultConfig', function() {
     });
     var home = process.env.HOME;
     var info = defaultConfig();
-    info.path.should.equal(home + '/.litecore');
+    info.path.should.equal(home + '/.litecoin');
     info.config.network.should.equal('livenet');
     info.config.port.should.equal(3001);
     info.config.services.should.deep.equal(['bitcoind', 'web']);
     var bitcoind = info.config.servicesConfig.bitcoind;
     should.exist(bitcoind);
-    bitcoind.spawn.datadir.should.equal(home + '/.litecore/data');
+    bitcoind.spawn.datadir.should.equal(home + '/.litecoin/data');
     bitcoind.spawn.exec.should.equal(expectedExecPath);
   });
   it('will include additional services', function() {
@@ -64,7 +64,7 @@ describe('#defaultConfig', function() {
       servicesConfig: {
         bitcoind: {
           spawn: {
-            datadir: process.env.HOME + '/.litecore/data',
+            datadir: process.env.HOME + '/.litecoin/data',
             exec: expectedExecPath
           }
         }
@@ -74,7 +74,7 @@ describe('#defaultConfig', function() {
       fs: {
         existsSync: sinon.stub().returns(false),
         writeFileSync: function(path, data) {
-          path.should.equal(process.env.HOME + '/.litecore/litecore-node.json');
+          path.should.equal(process.env.HOME + '/.litecoin/litecore-node.json');
           data.should.equal(config);
         },
         readFileSync: function() {
@@ -89,7 +89,7 @@ describe('#defaultConfig', function() {
     var info = defaultConfig({
       additionalServices: ['insight-api', 'insight-ui']
     });
-    info.path.should.equal(home + '/.litecore');
+    info.path.should.equal(home + '/.litecoin');
     info.config.network.should.equal('livenet');
     info.config.port.should.equal(3001);
     info.config.services.should.deep.equal([
@@ -100,7 +100,7 @@ describe('#defaultConfig', function() {
     ]);
     var bitcoind = info.config.servicesConfig.bitcoind;
     should.exist(bitcoind);
-    bitcoind.spawn.datadir.should.equal(home + '/.litecore/data');
+    bitcoind.spawn.datadir.should.equal(home + '/.litecoin/data');
     bitcoind.spawn.exec.should.equal(expectedExecPath);
   });
 });

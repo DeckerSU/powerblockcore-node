@@ -52,7 +52,7 @@ describe('P2P Functionality', function() {
       bitcoind = require('../').services.Bitcoin({
         spawn: {
           datadir: datadir,
-          exec: path.resolve(__dirname, '../bin/bitcoind')
+          exec: path.resolve(__dirname, '../bin/litecoind')
         },
         node: {
           network: bitcore.Networks.testnet
@@ -82,7 +82,7 @@ describe('P2P Functionality', function() {
 
         peer = new Peer({
           host: '127.0.0.1',
-          port: '18444',
+          // port: regtestNetwork.port, // regtestNetwork will provide the port: 19444
           network: regtestNetwork
         });
 
@@ -133,7 +133,7 @@ describe('P2P Functionality', function() {
                       var tx = bitcore.Transaction();
                       tx.from(utxo);
                       tx.change(privateKey.toAddress());
-                      tx.to(destKey.toAddress(), utxo.amount * 1e8 - 1000);
+                      tx.to(destKey.toAddress(), utxo.amount * 1e8 - 100000);
                       tx.sign(bitcore.PrivateKey.fromWIF(utxo.privateKeyWIF));
                       txs.push(tx);
                       finished();

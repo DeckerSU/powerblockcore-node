@@ -36,7 +36,7 @@
   ],
   "bin": {
     "litecore-node": "./bin/litecore-node",
-    "litecoind": "./bin/bitcoind"
+    "litecoind": "./bin/litecoind"
   },
   "scripts": {
     "preinstall": "./scripts/download",
@@ -75,7 +75,7 @@
   },
   "devDependencies": {
     "benchmark": "1.0.0",
-    "litecore-p2p": "^1.1.0",
+    "litecore-p2p": "git://github.com/litecoin-project/litecore-p2p#427dba833970d656a47dba12983c9d972a478191",
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
     "istanbul": "^0.4.3",
