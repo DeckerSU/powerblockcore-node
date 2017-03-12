@@ -2,7 +2,7 @@
   "name": "litecore-node",
   "description": "Full node with extended capabilities using Litecore and Litecoin Core",
   "author": "BitPay <dev@bitpay.com>",
-  "version": "3.1.5",
+  "version": "3.1.7",
   "main": "./index.js",
   "repository": "git://github.com/litecoin-project/litecore-node.git",
   "homepage": "https://github.com/litecoin-project/litecore-node",
@@ -75,7 +75,7 @@
   },
   "devDependencies": {
     "benchmark": "1.0.0",
-    "litecore-p2p": "git://github.com/litecoin-project/litecore-p2p#427dba833970d656a47dba12983c9d972a478191",
+    "litecore-p2p": "^1.1.2",
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
     "istanbul": "^0.4.3",

@@ -389,8 +389,8 @@ describe('Bitcoin Service', function() {
         txindex: 1,
         upnp: 0,
         whitelist: '127.0.0.1',
-        zmqpubhashblock: 'tcp://127.0.0.1:28332',
-        zmqpubrawtx: 'tcp://127.0.0.1:28332'
+        zmqpubhashblock: 'tcp://127.0.0.1:29332',
+        zmqpubrawtx: 'tcp://127.0.0.1:29332'
       });
     });
     it('will expand relative datadir to absolute path', function() {
@@ -503,8 +503,8 @@ describe('Bitcoin Service', function() {
         addressindex: 1,
         spentindex: 1,
         server: 1,
-        zmqpubrawtx: 'tcp://127.0.0.1:28332',
-        zmqpubhashblock: 'tcp://127.0.0.1:28331',
+        zmqpubrawtx: 'tcp://127.0.0.1:29332',
+        zmqpubhashblock: 'tcp://127.0.0.1:29331',
         reindex: 1
       };
       var node = {};
@@ -769,7 +769,7 @@ describe('Bitcoin Service', function() {
         }
       };
       var bitcoind = new BitcoinService(config);
-      bitcoind._getDefaultConf().rpcport.should.equal(8332);
+      bitcoind._getDefaultConf().rpcport.should.equal(9332);
     });
     it('will get default rpc port for testnet', function() {
       var config = {
@@ -782,7 +782,7 @@ describe('Bitcoin Service', function() {
         }
       };
       var bitcoind = new BitcoinService(config);
-      bitcoind._getDefaultConf().rpcport.should.equal(18332);
+      bitcoind._getDefaultConf().rpcport.should.equal(19332);
     });
     it('will get default rpc port for regtest', function() {
       bitcore.Networks.enableRegtest();
@@ -796,7 +796,7 @@ describe('Bitcoin Service', function() {
         }
       };
       var bitcoind = new BitcoinService(config);
-      bitcoind._getDefaultConf().rpcport.should.equal(18332);
+      bitcoind._getDefaultConf().rpcport.should.equal(19332);
     });
   });
 
