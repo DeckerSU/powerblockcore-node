@@ -1418,7 +1418,7 @@ describe('Bitcoin Service', function() {
         return socket;
       };
       var BitcoinService = proxyquire('../../lib/services/bitcoind', {
-        zmq: {
+        'zeromq': {
           socket: socketFunc
         }
       });
