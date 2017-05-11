@@ -2,7 +2,7 @@
   "name": "litecore-node",
   "description": "Full node with extended capabilities using Litecore and Litecoin Core",
   "author": "BitPay <dev@bitpay.com>",
-  "version": "3.1.8",
+  "version": "3.1.9",
   "main": "./index.js",
   "repository": "git://github.com/litecoin-project/litecore-node.git",
   "homepage": "https://github.com/litecoin-project/litecore-node",
