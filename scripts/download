@@ -5,15 +5,15 @@ set -e
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
 platform=`uname -a | awk '{print tolower($1)}'`
 arch=`uname -m`
-version="0.13.2.1-litecore-rc1"
+version="0.13.2"
 url="https://github.com/litecoin-project/litecore-litecoin/releases/download"
-tag="v0.13.2.1-litecore-rc1"
+tag="v0.13.2.1-litecore-rc2"
 
 if [ "${platform}" == "linux" ]; then
     if [ "${arch}" == "x86_64" ]; then
-        tarball_name="litecoin-${version}-linux64.tar.gz"
+        tarball_name="litecoin-${version}-x86_64-linux-gnu.tar.gz"
     elif [ "${arch}" == "x86_32" ]; then
-        tarball_name="litecoin-${version}-linux32.tar.gz"
+        tarball_name="litecoin-${version}-i686-pc-linux-gnu.tar.gz"
     fi
 elif [ "${platform}" == "darwin" ]; then
     tarball_name="litecoin-${version}-osx64.tar.gz"
