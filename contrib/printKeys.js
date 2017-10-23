@@ -3,8 +3,8 @@
 var levelup = require('levelup');
 var leveldown = require('leveldown');
 var Encoding = require('../lib/services/address/encoding');
-var dbPath = '/Users/chrisk/.bwdb/bitcore-node.db';
-var bitcore = require('bitcore-lib');
+var dbPath = '/Users/chrisk/.bwdb/litecore-node.db';
+var bitcore = require('litecore-lib');
 var db = levelup(dbPath, {keyEncoding: 'binary', valueEncoding: 'binary'});
 
 var prefix = new Buffer('0002', 'hex');

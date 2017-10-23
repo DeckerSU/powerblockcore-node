@@ -2,12 +2,12 @@
 
 var sinon = require('sinon');
 var AddressService = require('../../../lib/services/address');
-var Tx = require('bcoin').tx;
+var Tx = require('lcoin').tx;
 var expect = require('chai').expect;
 var Encoding  = require('../../../lib/services/address/encoding');
 var Readable = require('stream').Readable;
 var EventEmitter = require('events').EventEmitter;
-var bcoin = require('bcoin');
+var bcoin = require('lcoin');
 
 describe('Address Service', function() {
 
@@ -111,11 +111,11 @@ describe('Address Service', function() {
       var results = { items: [_tx] };
 
       sandbox.stub(addressService, 'getAddressHistory').callsArgWith(2, null, results);
-      addressService.getAddressSummary('1JoSiR4dBcSrGs2AZBP2gCHqCCsgzccsGb', {}, function(err, res) {
+      addressService.getAddressSummary('Ld2PydNTGGguXfiKjKNKxDMbQREyD87C5i', {}, function(err, res) {
         if (err) {
           return done(err);
         }
-        expect(res).to.deep.equal({ addrStr: '1JoSiR4dBcSrGs2AZBP2gCHqCCsgzccsGb',
+        expect(res).to.deep.equal({ addrStr: 'Ld2PydNTGGguXfiKjKNKxDMbQREyD87C5i',
           balance: 0.005,
           balanceSat: 500000,
           totalReceived: 0.005,

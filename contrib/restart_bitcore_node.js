@@ -6,6 +6,6 @@
 # e.g. ./contrib/restart_bwdb.sh && tail -f /tmp/bwdb-out
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-pkill -2 -x bitcore
+pkill -2 -x litecore
 wait
-exec $DIR/../bin/bitcore-node start >> /tmp/bwdb-out 2>&1 &
+exec $DIR/../bin/litecore-node start >> /tmp/bwdb-out 2>&1 &

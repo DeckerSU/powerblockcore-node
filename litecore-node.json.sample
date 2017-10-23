@@ -1,6 +1,6 @@
 {
   "network": "testnet",
-  "port": 3001,
+  "port": 4001,
   "datadir": "/tmp",
   "services": [
     "p2p",

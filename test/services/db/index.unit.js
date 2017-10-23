@@ -7,7 +7,7 @@ var expect = chai.expect;
 var DBService = require('../../../lib/services/db');
 var sinon = require('sinon');
 var Levelup = require('levelup');
-var Tx = require('bcoin').tx;
+var Tx = require('lcoin').tx;
 
 describe('DB', function() {
 
@@ -77,7 +77,7 @@ describe('DB', function() {
 
     it('should set the data path', function() {
       dbService._setDataPath();
-      dbService.dataPath.should.equal('/tmp/regtest/bitcorenode.db');
+      dbService.dataPath.should.equal('/tmp/regtest/litecorenode.db');
     });
 
   });

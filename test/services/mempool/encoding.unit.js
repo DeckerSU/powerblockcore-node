@@ -1,7 +1,7 @@
 'use strict';
 
 var should = require('chai').should();
-var tx = require('bcoin').tx;
+var tx = require('lcoin').tx;
 
 var Encoding = require('../../../lib/services/mempool/encoding');
 
