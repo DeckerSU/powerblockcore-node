@@ -283,7 +283,7 @@ describe('DB', function() {
 
         get.callCount.should.equal(1);
         tip.height.should.equal(0);
-        tip.hash.should.equal('0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206');
+        tip.hash.should.equal('530827f38f93b43ed12af0b3ad25a288dc02ed74d6d7857862df51fc56c416f9');
         done();
 
       });
