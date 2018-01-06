@@ -59,7 +59,7 @@ describe('Address Service', function() {
       sandbox.stub(addressService, '_getAddressTxidHistory').callsArgWith(2, null, null);
       sandbox.stub(addressService, '_getAddressTxHistory').callsArgWith(1, null, []);
 
-      addressService.getAddressHistory(['a', 'b', 'c'], { from: 12, to: 14 }, function(err, res) {
+      addressService.getAddressHistory(['LYxhsKoywRfViP9nJmjEZacMufhmzwcTb7', 'LZeMVCYin8dNo7GzbWKWGH5f9FYcvte8TQ', 'LRzTWTfLmpnzGeJkinvAnFHixs1vrhwLNG'], { from: 12, to: 14 }, function(err, res) {
 
         if (err) {
           return done(err);
@@ -141,7 +141,7 @@ describe('Address Service', function() {
       var encoding = new Encoding(new Buffer('0001', 'hex'));
       addressService._encoding = encoding;
 
-      var address = 'a';
+      var address = 'LYxhsKoywRfViP9nJmjEZacMufhmzwcTb7';
       var txid = tx.txid();
       var ts = Math.floor(new Date('2019-01-01').getTime() / 1000);
 
@@ -163,7 +163,7 @@ describe('Address Service', function() {
           return done(err);
         }
         expect(res[0]).to.deep.equal({
-          address: 'a',
+          address: 'LYxhsKoywRfViP9nJmjEZacMufhmzwcTb7',
           amount: 0.0012,
           height: 123,
           confirmations: 28,
