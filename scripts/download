@@ -1,29 +1,43 @@
 #!/bin/bash
 
 set -e
+: ${LTC_URL="https://github.com/litecoin-project/litecore-litecoin/releases/download"}
+: ${LTC_VERSION="0.13.2"}
+: ${LTC_TAG="v0.13.2.1-litecore-rc2"}
+: ${LTC_PLATFORM=""}
+: ${LTC_ARCH=""}
+: ${LTC_TARBALL=""}
 
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
-platform=`uname -a | awk '{print tolower($1)}'`
-arch=`uname -m`
-version="0.13.2"
-url="https://github.com/litecoin-project/litecore-litecoin/releases/download"
-tag="v0.13.2.1-litecore-rc2"
+[[ -n "$LTC_PLATFORM" ]] && platform="$LTC_PLATFORM" || platform=`uname -a | awk '{print tolower($1)}'`
+[[ -n "$LTC_ARCH" ]] && arch="$LTC_ARCH" || arch=`uname -m`
+version="$LTC_VERSION"
+url="$LTC_URL"
+tag="$LTC_TAG"
 
-if [ "${platform}" == "linux" ]; then
-    if [ "${arch}" == "x86_64" ]; then
-        tarball_name="litecoin-${version}-x86_64-linux-gnu.tar.gz"
-    elif [ "${arch}" == "x86_32" ]; then
-        tarball_name="litecoin-${version}-i686-pc-linux-gnu.tar.gz"
+if [[ -z "$LTC_TARBALL" ]]; then
+    if [ "${platform}" == "linux" ]; then
+        if [ "${arch}" == "x86_64" ]; then
+            tarball_name="litecoin-${version}-x86_64-linux-gnu.tar.gz"
+        elif [ "${arch}" == "x86_32" ]; then
+            tarball_name="litecoin-${version}-i686-pc-linux-gnu.tar.gz"
+        fi
+    elif [ "${platform}" == "darwin" ]; then
+        tarball_name="litecoin-${version}-osx64.tar.gz"
+    else
+        echo "Litecoin binary distribution not available for platform and architecture"
+        exit 5
     fi
-elif [ "${platform}" == "darwin" ]; then
-    tarball_name="litecoin-${version}-osx64.tar.gz"
 else
-    echo "Litecoin binary distribution not available for platform and architecture"
-    exit -1
+    tarball_name="$LTC_TARBALL"
 fi
 
-binary_url="${url}/${tag}/${tarball_name}"
-shasums_url="${url}/${tag}/SHA256SUMS.asc"
+: ${binary_url="${url}/${tag}/${tarball_name}"}
+: ${shasums_url="${url}/${tag}/SHA256SUMS.asc"}
+
+: ${LTC_VERIFY="0"}
+: ${VERIFY_BITCOIN_DOWNLOAD="$LTC_VERIFY"}
+: ${SKIP_BITCOIN_DOWNLOAD="0"}
 
 download_bitcoind() {
 
@@ -31,21 +45,21 @@ download_bitcoind() {
 
     echo "Downloading litecoin: ${binary_url}"
 
-    is_curl=true
+    is_curl=1
     if hash curl 2>/dev/null; then
-        curl --fail -I $binary_url >/dev/null 2>&1
+        curl --fail -I "$binary_url" >/dev/null 2>&1
     else
-        is_curl=false
-        wget --server-response --spider $binary_url >/dev/null 2>&1
+        is_curl=0
+        wget --server-response --spider "$binary_url" >/dev/null 2>&1
     fi
 
     if test $? -eq 0; then
-        if [ "${is_curl}" = true ]; then
-            curl -L $binary_url > $tarball_name
-            curl -L $shasums_url > SHA256SUMS.asc
+        if (( is_curl )); then
+            curl -L "$binary_url" > "$tarball_name"
+            (( VERIFY_BITCOIN_DOWNLOAD )) && curl -L "$shasums_url" > SHA256SUMS.asc || true
         else
             wget $binary_url
-            wget $shasums_url
+            (( VERIFY_BITCOIN_DOWNLOAD )) && wget $shasums_url || true
         fi
         if test -e "${tarball_name}"; then
             echo "Unpacking litecoin distribution"
@@ -57,7 +71,7 @@ download_bitcoind() {
         fi
     fi
     echo "Litecoin binary distribution could not be downloaded"
-    exit -1
+    exit 2
 }
 
 verify_download() {
@@ -82,16 +96,9 @@ verify_download() {
     fi
 }
 
-download=1
-verify=0
+(( SKIP_BITCOIN_DOWNLOAD )) && download=0 || download=1
+(( VERIFY_BITCOIN_DOWNLOAD )) && verify=1 || verify=0
 
-if [ "${SKIP_BITCOIN_DOWNLOAD}" = 1 ]; then
-    download=0;
-fi
-
-if [ "${VERIFY_BITCOIN_DOWNLOAD}" = 1 ]; then
-    verify=1;
-fi
 
 while [ -n "$1" ]; do
   param="$1"
@@ -108,12 +115,16 @@ while [ -n "$1" ]; do
   shift
 done
 
-if [ "${download}" = 1 ]; then
+if (( download )); then
     download_bitcoind
+else
+    >&2 echo -e "\n [!!!] Not downloading litecoind, as \$download is 0\n"
 fi
 
-if [ "${verify}" = 1 ]; then
+if (( verify )); then
     verify_download
+else
+    >&2 echo -e "\n [!!!] Not verifying litecoind, as \$verify is 0\n"
 fi
 
 exit 0
