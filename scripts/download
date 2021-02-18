@@ -8,7 +8,9 @@ set -e
 : ${LTC_ARCH=""}
 : ${LTC_TARBALL=""}
 
+#root_dir="$(realpath "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/..")"
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
+
 [[ -n "$LTC_PLATFORM" ]] && platform="$LTC_PLATFORM" || platform=`uname -a | awk '{print tolower($1)}'`
 [[ -n "$LTC_ARCH" ]] && arch="$LTC_ARCH" || arch=`uname -m`
 version="$LTC_VERSION"
@@ -45,6 +47,8 @@ hascmd() {
     command -v "$@" &> /dev/null
 }
 
+has_cmd() { hascmd "$@"; }
+
 (( USE_CURL )) && ! has_cmd curl && USE_CURL=0 || true
 (( USE_WGET )) && ! has_cmd wget && USE_WGET=0 || true
 if ! (( USE_CURL )) && ! hascmd wget && hascmd curl; then USE_CURL=1 USE_WGET=0; fi
@@ -52,16 +56,17 @@ if ! (( USE_WGET )) && ! hascmd curl && hascmd wget; then USE_CURL=0 USE_WGET=1;
 
 download_bitcoind() {
     local bdir="${root_dir}/bin"
-    [ -x "$root_dir" ] || chmod +x "$root_dir"
-    [ -r "$root_dir" ] || chmod +r "$root_dir"
-    [ -w "$root_dir" ] || chmod +w "$root_dir"
+    #[ -x "$root_dir" ] || chmod +x "$root_dir"
+    #[ -r "$root_dir" ] || chmod +r "$root_dir"
+    #[ -w "$root_dir" ] || chmod +w "$root_dir"
 
-    [[ -d "$bdir" ]] || mkdir -pv "$bdir"
-    [ -x "$bdir" ] || chmod +x "$bdir"
-    [ -r "$bdir" ] || chmod +r "$bdir"
-    [ -w "$bdir" ] || chmod +w "$bdir"
+    #[[ -d "$bdir" ]] || mkdir -pv "$bdir"
+    #[ -x "$bdir" ] || chmod +x "$bdir"
+    #[ -r "$bdir" ] || chmod +r "$bdir"
+    #[ -w "$bdir" ] || chmod +w "$bdir"
 
     cd "$bdir"
+    echo " >>> Binary dir is: $bdir"
 
     echo " [...] Testing URL works: ${binary_url}"
     
