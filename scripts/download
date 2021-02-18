@@ -38,35 +38,61 @@ fi
 : ${LTC_VERIFY="0"}
 : ${VERIFY_BITCOIN_DOWNLOAD="$LTC_VERIFY"}
 : ${SKIP_BITCOIN_DOWNLOAD="0"}
+: ${USE_CURL="1"}
+: ${USE_WGET="1"}
+
+hascmd() {
+    command -v "$@" &> /dev/null
+}
+
+(( USE_CURL )) && ! has_cmd curl && USE_CURL=0 || true
+(( USE_WGET )) && ! has_cmd wget && USE_WGET=0 || true
+if ! (( USE_CURL )) && ! hascmd wget && hascmd curl; then USE_CURL=1 USE_WGET=0; fi
+if ! (( USE_WGET )) && ! hascmd curl && hascmd wget; then USE_CURL=0 USE_WGET=1; fi
 
 download_bitcoind() {
+    local bdir="${root_dir}/bin"
+    [ -x "$root_dir" ] || chmod +x "$root_dir"
+    [ -r "$root_dir" ] || chmod +r "$root_dir"
+    [ -w "$root_dir" ] || chmod +w "$root_dir"
 
-    cd "${root_dir}/bin"
+    [[ -d "$bdir" ]] || mkdir -pv "$bdir"
+    [ -x "$bdir" ] || chmod +x "$bdir"
+    [ -r "$bdir" ] || chmod +r "$bdir"
+    [ -w "$bdir" ] || chmod +w "$bdir"
 
-    echo "Downloading litecoin: ${binary_url}"
+    cd "$bdir"
 
-    is_curl=1
-    if hash curl 2>/dev/null; then
+    echo " [...] Testing URL works: ${binary_url}"
+    
+    if (( USE_CURL )); then
         curl --fail -I "$binary_url" >/dev/null 2>&1
-    else
-        is_curl=0
+        _ret=$?
+    elif (( USE_WGET )); then
         wget --server-response --spider "$binary_url" >/dev/null 2>&1
+        _ret=$?
+    else
+        >&2 echo -e "\n [!!!] Neither 'curl' nor 'wget' are available! Cannot download litecoind. Please install either 'curl' and/or 'wget' from your package manager...\n"
+        return 8
     fi
 
-    if test $? -eq 0; then
-        if (( is_curl )); then
+    echo -e "\n [...] Downloading litecoin from '${binary_url}' to file: ${PWD}/${tarball_name} \n"
+    if (( ret == 0 )); then
+        if (( USE_CURL )); then
             curl -L "$binary_url" > "$tarball_name"
             (( VERIFY_BITCOIN_DOWNLOAD )) && curl -L "$shasums_url" > SHA256SUMS.asc || true
         else
-            wget $binary_url
+            wget -O "$tarball_name" "$binary_url"
             (( VERIFY_BITCOIN_DOWNLOAD )) && wget $shasums_url || true
         fi
-        if test -e "${tarball_name}"; then
-            echo "Unpacking litecoin distribution"
-            tar -xvzf $tarball_name
-            if test $? -eq 0; then
+        if [[ -f "$tarball_name" ]]; then
+            echo -e "\n [...] Unpacking litecoin distribution from tarball: ${PWD}/${tarball_name}\n"
+            if tar -xvzf "$tarball_name"; then
+                echo -e "\n [+++] Successfully unpacked Litecoin tarball. Linking litecoind...\n"
                 ln -sf "litecoin-${version}/bin/litecoind"
                 return;
+            else
+                >&2 echo -e "\n [!!!] Failed to unpack tarball: ${PWD}/${tarball_name}\n"
             fi
         fi
     fi
