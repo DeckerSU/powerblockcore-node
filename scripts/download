@@ -5,20 +5,20 @@ set -e
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
 platform=`uname -a | awk '{print tolower($1)}'`
 arch=`uname -m`
-version="0.13.2.1-litecore-rc1"
-url="https://github.com/litecoin-project/litecore-litecoin/releases/download"
-tag="v0.13.2.1-litecore-rc1"
+version="v0.16.3.0-powerblockcore"
+url="https://github.com/pbcllc/powerblockcoin-core/releases/download"
+tag="v0.16.3.0-powerblockcore"
 
 if [ "${platform}" == "linux" ]; then
     if [ "${arch}" == "x86_64" ]; then
-        tarball_name="litecoin-${version}-linux64.tar.gz"
+        tarball_name="powerblockcoin-${version}-linux64.tar.gz"
     elif [ "${arch}" == "x86_32" ]; then
-        tarball_name="litecoin-${version}-linux32.tar.gz"
+        tarball_name="powerblockcoin-${version}-linux32.tar.gz"
     fi
 elif [ "${platform}" == "darwin" ]; then
-    tarball_name="litecoin-${version}-osx64.tar.gz"
+    tarball_name="powerblockcoin-${version}-osx64.tar.gz"
 else
-    echo "Litecoin binary distribution not available for platform and architecture"
+    echo "powerblockcoin binary distribution not available for platform and architecture"
     exit -1
 fi
 
@@ -29,7 +29,7 @@ download_bitcoind() {
 
     cd "${root_dir}/bin"
 
-    echo "Downloading litecoin: ${binary_url}"
+    echo "Downloading powerblockcoin: ${binary_url}"
 
     is_curl=true
     if hash curl 2>/dev/null; then
@@ -48,20 +48,20 @@ download_bitcoind() {
             wget $shasums_url
         fi
         if test -e "${tarball_name}"; then
-            echo "Unpacking litecoin distribution"
+            echo "Unpacking powerblockcoin distribution"
             tar -xvzf $tarball_name
             if test $? -eq 0; then
-                ln -sf "litecoin-${version}/bin/litecoind"
+                ln -sf "powerblockcoin-${version}/bin/powerblockcoind"
                 return;
             fi
         fi
     fi
-    echo "Litecoin binary distribution could not be downloaded"
+    echo "powerblockcoin binary distribution could not be downloaded"
     exit -1
 }
 
 verify_download() {
-    echo "Verifying signatures of litecoin download"
+    echo "Verifying signatures of powerblockcoin download"
     gpg --verify "${root_dir}/bin/SHA256SUMS.asc"
 
     if hash shasum 2>/dev/null; then
