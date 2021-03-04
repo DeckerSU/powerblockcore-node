@@ -94,8 +94,8 @@ describe('#add', function() {
       var callCount = 0;
       var oldPackage = {
         dependencies: {
-          'litecore-lib': '^v0.1.0',
-          'litecore-node': '^v0.2.0'
+          'powerblockcore-lib': '^v0.1.0',
+          'powerblockcore-node': '^v0.2.0'
         }
       };
       var spawn = sinon.stub().returns({
