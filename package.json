@@ -1,13 +1,13 @@
 {
-  "name": "litecore-node",
-  "description": "Full node with extended capabilities using Litecore and Litecoin Core",
+  "name": "powerblockcore-node",
+  "description": "Full node with extended capabilities using Powerblockcore and Powerblockcoin Core",
   "author": "BitPay <dev@bitpay.com>",
-  "version": "3.1.11",
+  "version": "3.1.7",
   "main": "./index.js",
-  "repository": "git://github.com/litecoin-project/litecore-node.git",
-  "homepage": "https://github.com/litecoin-project/litecore-node",
+  "repository": "git://github.com/DeckerSU/powerblockcore-node.git",
+  "homepage": "https://github.com/DeckerSU/powerblockcore-node",
   "bugs": {
-    "url": "https://github.com/litecoin-project/litecore-node/issues"
+    "url": "https://github.com/DeckerSU/powerblockcore-node/issues"
   },
   "contributors": [
     {
@@ -32,11 +32,15 @@
     {
       "name": "Loshan T",
       "email": "loshan1212@gmail.com"
+    },
+    {
+      "name": "Decker",
+      "email": "deckersu@protonmail.com"
     }
   ],
   "bin": {
-    "litecore-node": "./bin/litecore-node",
-    "litecoind": "./bin/litecoind"
+    "powerblockcore-node": "./bin/powerblockcore-node",
+    "powerblockcoind": "./bin/powerblockcoind"
   },
   "scripts": {
     "preinstall": "./scripts/download",
@@ -48,26 +52,26 @@
     "coveralls": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- --recursive -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "tags": [
-    "litecoin",
-    "litecoind"
+    "powerblockcoin",
+    "powerblockcoind"
   ],
   "dependencies": {
     "async": "^1.3.0",
+    "bitcoind-rpc": "^0.6.0",
+    "powerblockcore-lib": "git+https://git@github.com/DeckerSU/powerblockcore-lib",
     "body-parser": "^1.13.3",
     "colors": "^1.1.2",
     "commander": "^2.8.1",
     "errno": "^0.1.4",
     "express": "^4.13.3",
     "liftoff": "^2.2.0",
-    "litecoind-rpc": "^0.7.1",
-    "litecore-lib": "^0.13.22",
     "lru-cache": "^4.0.1",
     "mkdirp": "0.5.0",
     "path-is-absolute": "^1.0.0",
     "semver": "^5.0.1",
     "socket.io": "^1.4.5",
     "socket.io-client": "^1.4.5",
-    "zeromq": "^4.2.0"
+    "zmq": "^2.14.0"
   },
   "optionalDependencies": {
     "bufferutil": "~1.2.1",
@@ -75,7 +79,7 @@
   },
   "devDependencies": {
     "benchmark": "1.0.0",
-    "litecore-p2p": "^1.1.2",
+    "powerblockcore-p2p": "git+https://git@github.com/DeckerSU/powerblockcore-p2p",
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
     "istanbul": "^0.4.3",
