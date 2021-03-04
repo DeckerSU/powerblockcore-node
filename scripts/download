@@ -1,112 +1,67 @@
 #!/bin/bash
 
 set -e
-: ${LTC_URL="https://github.com/litecoin-project/litecore-litecoin/releases/download"}
-: ${LTC_VERSION="0.13.2"}
-: ${LTC_TAG="v0.13.2.1-litecore-rc2"}
-: ${LTC_PLATFORM=""}
-: ${LTC_ARCH=""}
-: ${LTC_TARBALL=""}
 
-#root_dir="$(realpath "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/..")"
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
+platform=`uname -a | awk '{print tolower($1)}'`
+arch=`uname -m`
+version="v0.16.3.0-powerblockcore"
+url="https://github.com/pbcllc/powerblockcoin-core/releases/download"
+tag="v0.16.3.0-powerblockcore"
 
-[[ -n "$LTC_PLATFORM" ]] && platform="$LTC_PLATFORM" || platform=`uname -a | awk '{print tolower($1)}'`
-[[ -n "$LTC_ARCH" ]] && arch="$LTC_ARCH" || arch=`uname -m`
-version="$LTC_VERSION"
-url="$LTC_URL"
-tag="$LTC_TAG"
-
-if [[ -z "$LTC_TARBALL" ]]; then
-    if [ "${platform}" == "linux" ]; then
-        if [ "${arch}" == "x86_64" ]; then
-            tarball_name="litecoin-${version}-x86_64-linux-gnu.tar.gz"
-        elif [ "${arch}" == "x86_32" ]; then
-            tarball_name="litecoin-${version}-i686-pc-linux-gnu.tar.gz"
-        fi
-    elif [ "${platform}" == "darwin" ]; then
-        tarball_name="litecoin-${version}-osx64.tar.gz"
-    else
-        echo "Litecoin binary distribution not available for platform and architecture"
-        exit 5
+if [ "${platform}" == "linux" ]; then
+    if [ "${arch}" == "x86_64" ]; then
+        tarball_name="powerblockcoin-${version}-linux64.tar.gz"
+    elif [ "${arch}" == "x86_32" ]; then
+        tarball_name="powerblockcoin-${version}-linux32.tar.gz"
     fi
+elif [ "${platform}" == "darwin" ]; then
+    tarball_name="powerblockcoin-${version}-osx64.tar.gz"
 else
-    tarball_name="$LTC_TARBALL"
+    echo "powerblockcoin binary distribution not available for platform and architecture"
+    exit -1
 fi
 
-: ${binary_url="${url}/${tag}/${tarball_name}"}
-: ${shasums_url="${url}/${tag}/SHA256SUMS.asc"}
-
-: ${LTC_VERIFY="0"}
-: ${VERIFY_BITCOIN_DOWNLOAD="$LTC_VERIFY"}
-: ${SKIP_BITCOIN_DOWNLOAD="0"}
-: ${USE_CURL="1"}
-: ${USE_WGET="1"}
-
-hascmd() {
-    command -v "$@" &> /dev/null
-}
-
-has_cmd() { hascmd "$@"; }
-
-(( USE_CURL )) && ! has_cmd curl && USE_CURL=0 || true
-(( USE_WGET )) && ! has_cmd wget && USE_WGET=0 || true
-if ! (( USE_CURL )) && ! hascmd wget && hascmd curl; then USE_CURL=1 USE_WGET=0; fi
-if ! (( USE_WGET )) && ! hascmd curl && hascmd wget; then USE_CURL=0 USE_WGET=1; fi
+binary_url="${url}/${tag}/${tarball_name}"
+shasums_url="${url}/${tag}/SHA256SUMS.asc"
 
 download_bitcoind() {
-    local bdir="${root_dir}/bin"
-    #[ -x "$root_dir" ] || chmod +x "$root_dir"
-    #[ -r "$root_dir" ] || chmod +r "$root_dir"
-    #[ -w "$root_dir" ] || chmod +w "$root_dir"
 
-    #[[ -d "$bdir" ]] || mkdir -pv "$bdir"
-    #[ -x "$bdir" ] || chmod +x "$bdir"
-    #[ -r "$bdir" ] || chmod +r "$bdir"
-    #[ -w "$bdir" ] || chmod +w "$bdir"
+    cd "${root_dir}/bin"
 
-    cd "$bdir"
-    echo " >>> Binary dir is: $bdir"
+    echo "Downloading powerblockcoin: ${binary_url}"
 
-    echo " [...] Testing URL works: ${binary_url}"
-    
-    if (( USE_CURL )); then
-        curl --fail -I "$binary_url" >/dev/null 2>&1
-        _ret=$?
-    elif (( USE_WGET )); then
-        wget --server-response --spider "$binary_url" >/dev/null 2>&1
-        _ret=$?
+    is_curl=true
+    if hash curl 2>/dev/null; then
+        curl --fail -I $binary_url >/dev/null 2>&1
     else
-        >&2 echo -e "\n [!!!] Neither 'curl' nor 'wget' are available! Cannot download litecoind. Please install either 'curl' and/or 'wget' from your package manager...\n"
-        return 8
+        is_curl=false
+        wget --server-response --spider $binary_url >/dev/null 2>&1
     fi
 
-    echo -e "\n [...] Downloading litecoin from '${binary_url}' to file: ${PWD}/${tarball_name} \n"
-    if (( ret == 0 )); then
-        if (( USE_CURL )); then
-            curl -L "$binary_url" > "$tarball_name"
-            (( VERIFY_BITCOIN_DOWNLOAD )) && curl -L "$shasums_url" > SHA256SUMS.asc || true
+    if test $? -eq 0; then
+        if [ "${is_curl}" = true ]; then
+            curl -L $binary_url > $tarball_name
+            curl -L $shasums_url > SHA256SUMS.asc
         else
-            wget -O "$tarball_name" "$binary_url"
-            (( VERIFY_BITCOIN_DOWNLOAD )) && wget $shasums_url || true
+            wget $binary_url
+            wget $shasums_url
         fi
-        if [[ -f "$tarball_name" ]]; then
-            echo -e "\n [...] Unpacking litecoin distribution from tarball: ${PWD}/${tarball_name}\n"
-            if tar -xvzf "$tarball_name"; then
-                echo -e "\n [+++] Successfully unpacked Litecoin tarball. Linking litecoind...\n"
-                ln -sf "litecoin-${version}/bin/litecoind"
+        if test -e "${tarball_name}"; then
+            echo "Unpacking powerblockcoin distribution"
+            tar -xvzf $tarball_name
+            if test $? -eq 0; then
+                ln -sf "powerblockcoin-${version}/bin/powerblockcoind"
                 return;
-            else
-                >&2 echo -e "\n [!!!] Failed to unpack tarball: ${PWD}/${tarball_name}\n"
             fi
         fi
     fi
-    echo "Litecoin binary distribution could not be downloaded"
-    exit 2
+    echo "powerblockcoin binary distribution could not be downloaded"
+    exit -1
 }
 
 verify_download() {
-    echo "Verifying signatures of litecoin download"
+    echo "Verifying signatures of powerblockcoin download"
     gpg --verify "${root_dir}/bin/SHA256SUMS.asc"
 
     if hash shasum 2>/dev/null; then
@@ -127,9 +82,16 @@ verify_download() {
     fi
 }
 
-(( SKIP_BITCOIN_DOWNLOAD )) && download=0 || download=1
-(( VERIFY_BITCOIN_DOWNLOAD )) && verify=1 || verify=0
+download=1
+verify=0
 
+if [ "${SKIP_BITCOIN_DOWNLOAD}" = 1 ]; then
+    download=0;
+fi
+
+if [ "${VERIFY_BITCOIN_DOWNLOAD}" = 1 ]; then
+    verify=1;
+fi
 
 while [ -n "$1" ]; do
   param="$1"
@@ -146,16 +108,12 @@ while [ -n "$1" ]; do
   shift
 done
 
-if (( download )); then
+if [ "${download}" = 1 ]; then
     download_bitcoind
-else
-    >&2 echo -e "\n [!!!] Not downloading litecoind, as \$download is 0\n"
 fi
 
-if (( verify )); then
+if [ "${verify}" = 1 ]; then
     verify_download
-else
-    >&2 echo -e "\n [!!!] Not verifying litecoind, as \$verify is 0\n"
 fi
 
 exit 0
