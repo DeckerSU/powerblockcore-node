@@ -39,8 +39,7 @@
     }
   ],
   "bin": {
-    "powerblockcore-node": "./bin/powerblockcore-node",
-    "powerblockcoind": "./bin/powerblockcoind"
+    "powerblockcore-node": "./bin/powerblockcore-node"
   },
   "scripts": {
     "preinstall": "echo ./scripts/download",
