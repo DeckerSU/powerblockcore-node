@@ -4,9 +4,9 @@ var path = require('path');
 var async = require('async');
 var spawn = require('child_process').spawn;
 
-var BitcoinRPC = require('litecoind-rpc');
+var BitcoinRPC = require('powerblockcoind-rpc');
 var rimraf = require('rimraf');
-var bitcore = require('litecore-lib');
+var bitcore = require('powerblockcore-lib');
 var chai = require('chai');
 var should = chai.should();
 
@@ -19,7 +19,7 @@ var BitcoinService = index.services.Bitcoin;
 describe('Bitcoin Cluster', function() {
   var node;
   var daemons = [];
-  var execPath = path.resolve(__dirname, '../bin/litecoind');
+  var execPath = path.resolve(__dirname, '../bin/powerblockcoind');
   var nodesConf = [
     {
       datadir: path.resolve(__dirname, './data/node1'),
